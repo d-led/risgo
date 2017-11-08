@@ -2,21 +2,23 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-
+	render "github.com/d-led/risgo/render"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"os"
 )
 
 var cfgFile string
+var template string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:   "risgo",
+	Use:   "risgo <path_to>/<resources>.toml",
 	Short: "a simple cross-platform resource compiler",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-
+		render.Render(args[0], template)
 	},
 }
 
@@ -32,14 +34,9 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.risgo.toml)")
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "template", "t", "alternative template file to use")
 }
 
 // initConfig reads in config file and ENV variables if set.
