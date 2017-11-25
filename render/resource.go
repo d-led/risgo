@@ -2,13 +2,17 @@ package render
 
 import (
 	"github.com/d-led/risgo/app"
-	"github.com/pelletier/go-toml"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 )
 
-type resource interface{}
+type resource map[interface{}]interface{}
 
 func (r *Ris) loadResource(filename string) resource {
-	tree, err := toml.LoadFile(filename)
+	m := make(map[interface{}]interface{})
+	data, err := ioutil.ReadFile(filename)
 	app.QuitOnError(err)
-	return tree
+	err = yaml.Unmarshal(data, &m)
+	app.QuitOnError(err)
+	return m
 }

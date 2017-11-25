@@ -14,7 +14,7 @@ var template string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:   "risgo <path_to>/<resources>.toml",
+	Use:   "risgo <path_to>/<resources>.yml",
 	Short: "a simple cross-platform resource compiler",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
