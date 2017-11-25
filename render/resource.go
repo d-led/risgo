@@ -6,13 +6,30 @@ import (
 	"io/ioutil"
 )
 
-type resource map[interface{}]interface{}
+type resource struct {
+	Name        string
+	Member_name string //optional
+	Source_type string
+	Source      string
+	Compression string
+}
 
-func (r *Ris) loadResource(filename string) resource {
-	m := make(map[interface{}]interface{})
+type resource_collection struct {
+	Namespace string
+	Header    string
+	Source    string
+	Class     string
+	Resources []resource
+}
+
+func (r *Ris) loadResources(filename string) resource_collection {
+	res := resource_collection{}
+
 	data, err := ioutil.ReadFile(filename)
 	app.QuitOnError(err)
-	err = yaml.Unmarshal(data, &m)
+
+	err = yaml.Unmarshal(data, &res)
 	app.QuitOnError(err)
-	return m
+
+	return res
 }

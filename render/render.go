@@ -17,8 +17,8 @@ func Render(resource string, template string) {
 func (r *Ris) render() {
 	fmt.Println("Template:", templateName(r.template))
 	fmt.Println("Resource:", r.resource)
-	resource := r.loadResource(r.resource)
-	fmt.Println(resource)
+	resources := r.loadResources(r.resource)
+	fmt.Println(resources)
 }
 
 func templateName(t string) string {
