@@ -10,35 +10,44 @@ import (
 )
 
 type Ris struct {
-	resource string
-	template string
+	Resource       string
+	Template       string
+	HeaderOverride string
+	SourceOverride string
 }
 
-func Render(resource string, template string) {
-	r := Ris{resource, template}
+func (r *Ris) Render() {
 	r.render()
 }
 
 func (r *Ris) render() {
-	t := getTemplate(r.template)
-	fmt.Println("Template:", t.name)
-	fmt.Println("Resource:", r.resource)
+	t := getTemplate(r.Template)
+	fmt.Println("Template:", t.Name)
+	fmt.Println("Resource:", r.Resource)
 
-	resources := r.loadResources(r.resource)
+	resources := r.loadResources(r.Resource)
 
 	ctx := contextFrom(resources)
 
-	header, err := renderTemplate(t.header, ctx)
+	header, err := renderTemplate(t.Header, ctx)
 	app.QuitOnError(err)
 
-	source, err := renderTemplate(t.source, ctx)
+	source, err := renderTemplate(t.Source, ctx)
 	app.QuitOnError(err)
 
-	fmt.Println("Writing", resources.Header)
-	writeAllText(header, resources.Header)
+	header_filename := resources.Header
+	if r.HeaderOverride != "" {
+		header_filename = r.HeaderOverride
+	}
+	fmt.Println("Writing", header_filename)
+	writeAllText(header, header_filename)
 
-	fmt.Println("Writing", resources.Source)
-	writeAllText(source, resources.Source)
+	source_filename := resources.Source
+	if r.SourceOverride != "" {
+		source_filename = r.SourceOverride
+	}
+	fmt.Println("Writing", source_filename)
+	writeAllText(source, source_filename)
 }
 
 func contextFrom(resources resource_collection) map[string]interface{} {
@@ -78,7 +87,7 @@ func resourceContent(r resource, base_dir string) string {
 		return r.Source
 	} else if r.Source_type == "file" {
 		next_to_template := path.Join(base_dir, r.Source)
-		return readAllText(next_to_template)
+		return string(readAllBytes(next_to_template))
 	} else {
 		app.QuitOnError(errors.New("unknown source type: " + r.Source_type))
 	}
@@ -93,10 +102,10 @@ func memberName(r resource) string {
 	}
 }
 
-func readAllText(filename string) string {
+func readAllBytes(filename string) []byte {
 	data, err := ioutil.ReadFile(filename)
 	app.QuitOnError(err)
-	return string(data)
+	return data
 }
 
 func writeAllText(text string, filename string) {

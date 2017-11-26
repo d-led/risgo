@@ -11,6 +11,8 @@ import (
 
 var cfgFile string
 var template string
+var sourceOverride string
+var headerOverride string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -18,7 +20,13 @@ var RootCmd = &cobra.Command{
 	Short: "a simple cross-platform resource compiler",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		render.Render(args[0], template)
+		ris := render.Ris{
+			Resource:       args[0],
+			Template:       template,
+			SourceOverride: sourceOverride,
+			HeaderOverride: headerOverride,
+		}
+		ris.Render()
 	},
 }
 
@@ -36,7 +44,9 @@ func init() {
 
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.risgo.toml)")
 
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "template", "t", "alternative template file to use")
+	RootCmd.PersistentFlags().StringVar(&template, "template", "", "alternative template file to use")
+	RootCmd.PersistentFlags().StringVar(&sourceOverride, "source", "", "alternative output source file (optional)")
+	RootCmd.PersistentFlags().StringVar(&headerOverride, "header", "", "alternative output header file (optional)")
 }
 
 // initConfig reads in config file and ENV variables if set.

@@ -2,16 +2,17 @@ package render
 
 import (
 	"bytes"
-	"strconv"
-
 	"github.com/aymerick/raymond"
+	"github.com/d-led/risgo/app"
+
+	"gopkg.in/yaml.v2"
+	"strconv"
 )
 
 type template struct {
-	name             string
-	header           string
-	source           string
-	context_defaults map[string]interface{}
+	Name   string
+	Header string
+	Source string
 }
 
 func getTemplate(t string) template {
@@ -24,16 +25,22 @@ func getTemplate(t string) template {
 
 func defaultTemplate() template {
 	return template{
-		name:   "<default>",
-		header: defaultHeaderTemplate,
-		source: defaultSourceTemplate,
+		Name:   "<default>",
+		Header: defaultHeaderTemplate,
+		Source: defaultSourceTemplate,
 	}
 }
 
 func loadTemplate(filename string) template {
-	return template{
-		name: filename,
+	t := template{}
+	err := yaml.Unmarshal(readAllBytes(filename), &t)
+	app.QuitOnError(err)
+
+	if t.Name == "" {
+		t.Name = filename
 	}
+
+	return t
 }
 
 func renderTemplate(tpl string, ctx map[string]interface{}) (string, error) {
