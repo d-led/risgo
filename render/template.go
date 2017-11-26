@@ -31,6 +31,13 @@ func defaultTemplate() template {
 	}
 }
 
+func DefaultTemplateYaml() string {
+	t := defaultTemplate()
+	res, err := yaml.Marshal(&t)
+	app.QuitOnError(err)
+	return string(res)
+}
+
 func loadTemplate(filename string) template {
 	t := template{}
 	err := yaml.Unmarshal(readAllBytes(filename), &t)
@@ -121,9 +128,9 @@ namespace {{namespace_name}} {
 std::string {{class_name}}::Get(std::string const& key) {
     static std::unordered_map<std::string,ResourceGetter> getters = {
 {{#each resource}}
-	{ "{{name}}", {{class_name}}::{{member_name}} },
+    { "{{name}}", {{class_name}}::{{member_name}} },
 {{/each}}
-	};
+    };
     auto getter = getters.find(key);
     if (getter == getters.end())
          return OnNoKey(key);
