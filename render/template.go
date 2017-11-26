@@ -56,10 +56,11 @@ func renderButesFor(what string) func() string {
 }
 
 const defaultHeaderTemplate = `#pragma once
-/* This file has been generated using ris, do not modify! */
+/* This file has been generated using risgo, do not modify! */
 #include <string>
 
 namespace {{namespace_name}} {
+
 class {{class_name}} /*final*/ {
 public:
   {{#each resource}}
@@ -81,16 +82,22 @@ static void GetKeys(TInserter inserter) {
 }
 public: // key/value api
     static std::string Get(std::string const& key);
-{{header_on_no_key}}
+
+public:
+    static std::string OnNoKey(std::string const& key="") {
+        return "";
+    }
 };
+
 }
 `
 
-const defaultSourceTemplate = `/* This file has been generated using ris, do not modify! */
+const defaultSourceTemplate = `/* This file has been generated using risgo, do not modify! */
 #include <unordered_map>
-{{{source_include}}}
+#include "{{source_include}}"
 
 namespace {{namespace_name}} {
+
 {{#each resource}}
     std::string {{class_name}}::{{member_name}}() {
         static char const literal[] = {
@@ -108,5 +115,6 @@ std::string {{class_name}}::Get(std::string const& key) {
          return OnNoKey(key);
     return getter->second();
 }
+
 }
 `
