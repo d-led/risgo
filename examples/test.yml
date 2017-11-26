@@ -17,11 +17,11 @@ resources:
     name: "itself"
     source: "test.json"
     source_type: "file"
-  -
-    compression: "LZ4F"
-    name: "itself_packed_lz4"
-    source: "test.json"
-    source_type: "file"
+  # -
+  #   compression: "LZ4F"
+  #   name: "itself_packed_lz4"
+  #   source: "test.json"
+  #   source_type: "file"
   -
     member_name: "custom_member_name"
     name: "custom.member/name"

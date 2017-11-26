@@ -54,6 +54,11 @@ func prepareResources(resources resource_collection) []map[string]interface{} {
 	res := []map[string]interface{}{}
 	base_dir := path.Dir(resources.ResourceSource)
 	for _, r := range resources.Resources {
+
+		if r.Compression != "" {
+			app.QuitOnError(errors.New("Compression with " + r.Compression + " not supported yet!"))
+		}
+
 		member_name := memberName(r)
 
 		res = append(res,

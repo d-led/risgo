@@ -9,7 +9,6 @@ public:
     static std::string string_test();
     static std::string binary_file_test();
     static std::string itself();
-    static std::string itself_packed_lz4();
     static std::string custom_member_name();
     static std::string multiline_example();
 public:
@@ -21,7 +20,6 @@ static void GetKeys(TInserter inserter) {
         "string_test",
         "binary_file_test",
         "itself",
-        "itself_packed_lz4",
         "custom.member/name",
         "multiline_example",
     };
