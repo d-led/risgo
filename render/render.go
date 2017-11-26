@@ -65,7 +65,6 @@ func contextFrom(resources resource_collection, headerOverride string) map[strin
 
 func prepareResources(resources resource_collection) []map[string]interface{} {
 	res := []map[string]interface{}{}
-	fmt.Println("res source", resources.ResourceSource)
 	// path.Dir doesn't seem to handle windows paths correctly
 	base_dir := path.Clean(path.Dir(strings.Replace(resources.ResourceSource,"\\","/",-1)))
 	for _, r := range resources.Resources {
@@ -92,7 +91,6 @@ func resourceContent(r resource, base_dir string) []byte {
 	if r.Source_type == "string" {
 		return []byte(r.Source)
 	} else if r.Source_type == "file" {
-		fmt.Println("base dir",base_dir)
 		next_to_template := path.Clean(path.Join(base_dir, r.Source))
 		return readAllBytes(next_to_template)
 	} else {
