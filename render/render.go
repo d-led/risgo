@@ -86,16 +86,16 @@ func prepareResources(resources resource_collection) []map[string]interface{} {
 	return res
 }
 
-func resourceContent(r resource, base_dir string) string {
+func resourceContent(r resource, base_dir string) []byte {
 	if r.Source_type == "string" {
-		return r.Source
+		return []byte(r.Source)
 	} else if r.Source_type == "file" {
 		next_to_template := path.Join(base_dir, r.Source)
-		return string(readAllBytes(next_to_template))
+		return readAllBytes(next_to_template)
 	} else {
 		app.QuitOnError(errors.New("unknown source type: " + r.Source_type))
 	}
-	return ""
+	return []byte("")
 }
 
 func memberName(r resource) string {

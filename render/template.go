@@ -54,11 +54,11 @@ func renderTemplate(tpl string, ctx map[string]interface{}) (string, error) {
 	return raymond.Render(tpl, ctx)
 }
 
-func renderBytesFor(what string) func() string {
+func renderBytesFor(what []byte) func() string {
 	return func() string {
 		var buffer bytes.Buffer
 		const maxBytesOnLine = 80
-		for i, b := range []byte(what) {
+		for i, b := range what {
 			if i != 0 {
 				buffer.WriteString(", ")
 			}
