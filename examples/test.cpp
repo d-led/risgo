@@ -43,3 +43,8 @@ TEST_CASE("files are not null-terminated (test.bin should be <<0,1,2,3>>)") {
     // by design of the test file
     CHECK(binary[0]==0);
 }
+
+TEST_CASE("default missing key doesn't throw and returns an empty string") {
+    CHECK_NOTHROW(test::res::Get("doesn't exist"));
+    CHECK(test::res::Get("doesn't exist") == "");
+}
