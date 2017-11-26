@@ -1,7 +1,9 @@
 package render
 
 import (
-	// "fmt"
+	"bytes"
+	"strconv"
+
 	"github.com/aymerick/raymond"
 )
 
@@ -12,74 +14,46 @@ type template struct {
 	context_defaults map[string]interface{}
 }
 
-// ---
-// class: Resource
-// header: ris_lib/template.h
-// namespace: ris
-// resources:
-//   -
-//     name: header_preamble
-//     source: "/* This file has been generated using ris, do not modify! */\n"
-//     source_type: string
-//   -
-//     name: header_includes
-//     source: "#include <string>\n"
-//     source_type: string
-//   -
-//     name: class_name
-//     source: Resource
-//     source_type: string
-//   -
-//     name: source_preamble
-//     source: "/* This file has been generated using ris, do not modify! */"
-//     source_type: string
-//   -
-//     name: source_includes
-//     source: "#include <unordered_map>"
-//     source_type: string
-//   -
-//   -
-//     name: source
-//     source: |
-//     source_type: string
-//   -
-//     name: header_single_declaration
-//     source: "    static std::string {{resource_member_name}}();\n"
-//     source_type: string
-//   -
-//     name: source_single_definition
-//     source: |
-//         std::string {{class_name}}::{{resource_member_name}}() {
-//             static char const literal[] = {{{source_literal_bytes}}
-//             };
-//         {{source_return_literal}}
-//         }
-//     source_type: string
-//   -
-//     name: source_single_getter
-//     source: "        { \"{{resource_name}}\", {{class_name}}::{{resource_member_name}} },\n"
-//     source_type: string
-//   -
-//     name: header_single_resource_name
-//     source: "        \"{{resource_name}}\",\n"
-//     source_type: string
-//   -
-//     name: source_return_plain_literal
-//     source: "    return std::string(literal, sizeof(literal)/sizeof(char));"
-//     source_type: string
-//   -
-//     name: source_return_compressed_literal
-//     source: "    return bundle::unpack(std::string(literal, sizeof(literal)/sizeof(char)));"
-//     source_type: string
-//   -
-//     name: header_on_no_key
-//     source: |
-//         public:
-//             static std::string OnNoKey(std::string const& key="") {
-//                 return "";
-//             }
-//     source_type: string
-// source: ris_lib/template.cpp
+func getTemplate(t string) template {
+	if t == "" {
+		return defaultTemplate()
+	}
+
+	return loadTemplate(t)
+}
+
+func defaultTemplate() template {
+	return template{
+		name:   "<default>",
+		header: defaultHeaderTemplate,
+		source: defaultSourceTemplate,
+	}
+}
+
+func loadTemplate(filename string) template {
+	return template{
+		name: filename,
+	}
+}
+
+func renderTemplate(tpl string, ctx map[string]interface{}) (string, error) {
+	return raymond.Render(tpl, ctx)
+}
+
+func renderButesFor(what string) func() string {
+	return func() string {
+		var buffer bytes.Buffer
+		const maxBytesOnLine = 3
+		for i, b := range []byte(what) {
+			buffer.WriteString(strconv.Itoa(int(b)))
+			buffer.WriteString(", ")
+			if (i+1)%maxBytesOnLine == 0 {
+				buffer.WriteRune('\n')
+			}
+		}
+		return buffer.String()
+	}
+}
 
 const defaultHeaderTemplate = `#pragma once
 /* This file has been generated using ris, do not modify! */
@@ -120,7 +94,7 @@ namespace {{namespace_name}} {
 {{#each resource}}
     std::string {{class_name}}::{{member_name}}() {
         static char const literal[] = {
-            {{bytes}}
+{{bytes}}
         ;
         return std::string(literal, sizeof(literal)/sizeof(char));
     }
@@ -136,29 +110,3 @@ std::string {{class_name}}::Get(std::string const& key) {
 }
 }
 `
-
-func getTemplate(t string) template {
-	if t == "" {
-		return defaultTemplate()
-	}
-
-	return loadTemplate(t)
-}
-
-func defaultTemplate() template {
-	return template{
-		name:   "<default>",
-		header: defaultHeaderTemplate,
-		source: defaultSourceTemplate,
-	}
-}
-
-func loadTemplate(filename string) template {
-	return template{
-		name: filename,
-	}
-}
-
-func renderTemplate(tpl string, ctx map[string]interface{}) (string, error) {
-	return raymond.Render(tpl, ctx)
-}

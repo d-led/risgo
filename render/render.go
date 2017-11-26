@@ -1,9 +1,7 @@
 package render
 
 import (
-	"bytes"
 	"fmt"
-	"strconv"
 )
 
 type Ris struct {
@@ -30,14 +28,7 @@ func (r *Ris) render() {
 			{
 				"member_name": "bla",
 				"name":        "bla",
-				"bytes": func() string {
-					var buffer bytes.Buffer
-					for _, b := range []byte("hello, world") {
-						buffer.WriteString(strconv.Itoa(int(b)))
-						buffer.WriteString(", ")
-					}
-					return buffer.String()
-				},
+				"bytes":       renderButesFor("hello, world"),
 			},
 		},
 	}
