@@ -22,32 +22,35 @@ func (r *Ris) Render() {
 
 func (r *Ris) render() {
 	t := getTemplate(r.Template)
+
 	fmt.Println("Template:", t.Name)
 	fmt.Println("Resource:", r.Resource)
 
 	resources := r.loadResources(r.Resource)
 
+	applyOverrides(&resources, r)
+
 	ctx := contextFrom(resources, r.HeaderOverride)
 
-	header, err := renderTemplate(t.Header, ctx)
-	app.QuitOnError(err)
+	renderToFile(t.Header, ctx, resources.Header)
+	renderToFile(t.Source, ctx, resources.Source)
+}
 
-	source, err := renderTemplate(t.Source, ctx)
-	app.QuitOnError(err)
-
-	header_filename := resources.Header
+func applyOverrides(resources *resource_collection, r *Ris) {
 	if r.HeaderOverride != "" {
-		header_filename = r.HeaderOverride
+		resources.Header = r.HeaderOverride
 	}
-	fmt.Println("Writing", header_filename)
-	writeAllText(header, header_filename)
 
-	source_filename := resources.Source
 	if r.SourceOverride != "" {
-		source_filename = r.SourceOverride
+		resources.Source = r.SourceOverride
 	}
-	fmt.Println("Writing", source_filename)
-	writeAllText(source, source_filename)
+}
+
+func renderToFile(template string, ctx map[string]interface{}, filename string) {
+	res, err := renderTemplate(template, ctx)
+	app.QuitOnError(err)
+	fmt.Println("Writing", filename)
+	writeAllText(res, filename)
 }
 
 func contextFrom(resources resource_collection, headerOverride string) map[string]interface{} {
