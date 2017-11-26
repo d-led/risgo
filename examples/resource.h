@@ -6,12 +6,12 @@ namespace test {
 
 class res /*final*/ {
 public:
-    static std::string string_test;
-    static std::string binary_file_test;
-    static std::string itself;
-    static std::string itself_packed_lz4;
-    static std::string custom_member_name;
-    static std::string multiline_example;
+    static std::string string_test();
+    static std::string binary_file_test();
+    static std::string itself();
+    static std::string itself_packed_lz4();
+    static std::string custom_member_name();
+    static std::string multiline_example();
 public:
     typedef std::string(*ResourceGetter)();
 public: // key/value api

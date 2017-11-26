@@ -45,8 +45,12 @@ func renderBytesFor(what string) func() string {
 		var buffer bytes.Buffer
 		const maxBytesOnLine = 80
 		for i, b := range []byte(what) {
+			if i != 0 {
+				buffer.WriteString(", ")
+			}
+
 			buffer.WriteString(strconv.Itoa(int(b)))
-			buffer.WriteString(", ")
+
 			if (i+1)%maxBytesOnLine == 0 {
 				buffer.WriteRune('\n')
 			}
@@ -64,7 +68,7 @@ namespace {{namespace_name}} {
 class {{class_name}} /*final*/ {
 public:
   {{#each resource}}
-    static std::string {{member_name}};
+    static std::string {{member_name}}();
   {{/each}}
 public:
     typedef std::string(*ResourceGetter)();
@@ -101,7 +105,7 @@ namespace {{namespace_name}} {
 {{#each resource}}
     std::string {{class_name}}::{{member_name}}() {
         static char const literal[] = {
-{{bytes}}
+{{bytes}} }
         ;
         return std::string(literal, sizeof(literal)/sizeof(char));
     }
