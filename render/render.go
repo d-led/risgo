@@ -1,9 +1,11 @@
 package render
 
 import (
+	"errors"
 	"fmt"
 	"github.com/d-led/risgo/app"
 	"io/ioutil"
+	"path"
 	"strings"
 )
 
@@ -44,20 +46,21 @@ func contextFrom(resources resource_collection) map[string]interface{} {
 		"source_include": resources.Header,
 		"namespace_name": resources.Namespace,
 		"class_name":     resources.Class,
-		"resource":       prepareResources(resources.Resources),
+		"resource":       prepareResources(resources),
 	}
 }
 
-func prepareResources(resources []resource) []map[string]interface{} {
+func prepareResources(resources resource_collection) []map[string]interface{} {
 	res := []map[string]interface{}{}
-	for _, r := range resources {
+	base_dir := path.Dir(resources.ResourceSource)
+	for _, r := range resources.Resources {
 		member_name := memberName(r)
 
 		res = append(res,
 			map[string]interface{}{
 				"member_name": member_name,
 				"name":        r.Name,
-				"bytes":       renderBytesFor(resourceContent(r)),
+				"bytes":       renderBytesFor(resourceContent(r, base_dir)),
 			},
 		)
 	}
@@ -65,12 +68,16 @@ func prepareResources(resources []resource) []map[string]interface{} {
 	return res
 }
 
-func resourceContent(r resource) string {
+func resourceContent(r resource, base_dir string) string {
 	if r.Source_type == "string" {
 		return r.Source
+	} else if r.Source_type == "file" {
+		next_to_template := path.Join(base_dir, r.Source)
+		return readAllText(next_to_template)
 	} else {
-		return "...todo"
+		app.QuitOnError(errors.New("unknown source type: " + r.Source_type))
 	}
+	return ""
 }
 
 func memberName(r resource) string {
@@ -79,6 +86,12 @@ func memberName(r resource) string {
 	} else {
 		return strings.TrimSpace(r.Member_name)
 	}
+}
+
+func readAllText(filename string) string {
+	data, err := ioutil.ReadFile(filename)
+	app.QuitOnError(err)
+	return string(data)
 }
 
 func writeAllText(text string, filename string) {

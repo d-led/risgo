@@ -15,11 +15,12 @@ type resource struct {
 }
 
 type resource_collection struct {
-	Namespace string
-	Header    string
-	Source    string
-	Class     string
-	Resources []resource
+	ResourceSource string // where
+	Namespace      string
+	Header         string
+	Source         string
+	Class          string
+	Resources      []resource
 }
 
 func (r *Ris) loadResources(filename string) resource_collection {
@@ -30,6 +31,8 @@ func (r *Ris) loadResources(filename string) resource_collection {
 
 	err = yaml.Unmarshal(data, &res)
 	app.QuitOnError(err)
+
+	res.ResourceSource = filename
 
 	return res
 }
