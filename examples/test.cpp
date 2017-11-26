@@ -15,7 +15,7 @@
 namespace {
 std::string readAllBytes(std::string const& filename)
 {
-    std::ifstream file(filename, std::ios::binary);
+    std::ifstream file(filename.c_str(), std::ios::binary);
     if (!file)
         throw std::runtime_error(std::string("cannot open ") + filename);
 
