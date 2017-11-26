@@ -4,13 +4,39 @@
 
 namespace test {
 
-    std::string res::bla() {
+    std::string res::string_test() {
         static char const literal[] = {
-104, 101, 108, 
-108, 111, 44, 
-32, 119, 111, 
-114, 108, 100, 
-
+112, 108, 97, 105, 110, 32, 116, 101, 120, 116, 
+        ;
+        return std::string(literal, sizeof(literal)/sizeof(char));
+    }
+    std::string res::binary_file_test() {
+        static char const literal[] = {
+46, 46, 46, 116, 111, 100, 111, 
+        ;
+        return std::string(literal, sizeof(literal)/sizeof(char));
+    }
+    std::string res::itself() {
+        static char const literal[] = {
+46, 46, 46, 116, 111, 100, 111, 
+        ;
+        return std::string(literal, sizeof(literal)/sizeof(char));
+    }
+    std::string res::itself_packed_lz4() {
+        static char const literal[] = {
+46, 46, 46, 116, 111, 100, 111, 
+        ;
+        return std::string(literal, sizeof(literal)/sizeof(char));
+    }
+    std::string res::custom_member_name() {
+        static char const literal[] = {
+116, 101, 115, 116, 
+        ;
+        return std::string(literal, sizeof(literal)/sizeof(char));
+    }
+    std::string res::multiline_example() {
+        static char const literal[] = {
+116, 104, 101, 115, 101, 32, 97, 114, 101, 10, 10, 116, 104, 114, 101, 101, 32, 108, 105, 110, 101, 115, 
         ;
         return std::string(literal, sizeof(literal)/sizeof(char));
     }

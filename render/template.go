@@ -40,10 +40,10 @@ func renderTemplate(tpl string, ctx map[string]interface{}) (string, error) {
 	return raymond.Render(tpl, ctx)
 }
 
-func renderButesFor(what string) func() string {
+func renderBytesFor(what string) func() string {
 	return func() string {
 		var buffer bytes.Buffer
-		const maxBytesOnLine = 3
+		const maxBytesOnLine = 80
 		for i, b := range []byte(what) {
 			buffer.WriteString(strconv.Itoa(int(b)))
 			buffer.WriteString(", ")

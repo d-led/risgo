@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/d-led/risgo/app"
 	"io/ioutil"
+	"strings"
 )
 
 type Ris struct {
@@ -20,7 +21,9 @@ func (r *Ris) render() {
 	t := getTemplate(r.template)
 	fmt.Println("Template:", t.name)
 	fmt.Println("Resource:", r.resource)
+
 	resources := r.loadResources(r.resource)
+
 	ctx := contextFrom(resources)
 
 	header, err := renderTemplate(t.header, ctx)
@@ -41,13 +44,40 @@ func contextFrom(resources resource_collection) map[string]interface{} {
 		"source_include": resources.Header,
 		"namespace_name": resources.Namespace,
 		"class_name":     resources.Class,
-		"resource": []map[string]interface{}{
-			{
-				"member_name": "bla",
-				"name":        "bla",
-				"bytes":       renderButesFor("hello, world"),
+		"resource":       prepareResources(resources.Resources),
+	}
+}
+
+func prepareResources(resources []resource) []map[string]interface{} {
+	res := []map[string]interface{}{}
+	for _, r := range resources {
+		member_name := memberName(r)
+
+		res = append(res,
+			map[string]interface{}{
+				"member_name": member_name,
+				"name":        r.Name,
+				"bytes":       renderBytesFor(resourceContent(r)),
 			},
-		},
+		)
+	}
+
+	return res
+}
+
+func resourceContent(r resource) string {
+	if r.Source_type == "string" {
+		return r.Source
+	} else {
+		return "...todo"
+	}
+}
+
+func memberName(r resource) string {
+	if len(strings.TrimSpace(r.Member_name)) == 0 {
+		return strings.TrimSpace(r.Name)
+	} else {
+		return strings.TrimSpace(r.Member_name)
 	}
 }
 
