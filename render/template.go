@@ -38,47 +38,9 @@ type template struct {
 //     source: "#include <unordered_map>"
 //     source_type: string
 //   -
-//     name: header
-//     source: |
-//         #pragma once
-//         {{header_preamble}}
-//         {{header_includes}}
-//         namespace {{namespace_name}} {
-//         class {{class_name}} /*final*/ {
-//         public:
-//         {{header_declarations}}
-//         public:
-//             typedef std::string(*ResourceGetter)();
-//         public: // key/value api
-//         template <typename TInserter>
-//         static void GetKeys(TInserter inserter) {
-//             static const char* keys[] = {
-//         {{header_resource_names}}    };
-//             for (auto key : keys) {
-//                 inserter(key);
-//             }
-//         }
-//         public: // key/value api
-//             static std::string Get(std::string const& key);
-//         {{header_on_no_key}}};
-//         }
-//     source_type: string
 //   -
 //     name: source
 //     source: |
-//         {{source_preamble}}
-//         {{source_default_include}}
-//         {{source_includes}}
-//         {{optional_compression_header}}namespace {{namespace_name}} {
-//         {{source_definitions}}std::string {{class_name}}::Get(std::string const& key) {
-//             static std::unordered_map<std::string,ResourceGetter> getters = {
-//         {{source_getters}}    };
-//             auto getter = getters.find(key);
-//             if (getter == getters.end())
-//                  return OnNoKey(key);
-//             return getter->second();
-//         }
-//         }
 //     source_type: string
 //   -
 //     name: header_single_declaration
@@ -150,6 +112,31 @@ public: // key/value api
 }
 `
 
+const defaultSourceTemplate = `/* This file has been generated using ris, do not modify! */
+#include <unordered_map>
+{{{source_include}}}
+
+namespace {{namespace_name}} {
+{{#each resource}}
+    std::string {{class_name}}::{{member_name}}() {
+        static char const literal[] = {
+            {{bytes}}
+        ;
+        return std::string(literal, sizeof(literal)/sizeof(char));
+    }
+{{/each}}
+
+std::string {{class_name}}::Get(std::string const& key) {
+    static std::unordered_map<std::string,ResourceGetter> getters = {
+{{source_getters}}    };
+    auto getter = getters.find(key);
+    if (getter == getters.end())
+         return OnNoKey(key);
+    return getter->second();
+}
+}
+`
+
 func getTemplate(t string) template {
 	if t == "" {
 		return defaultTemplate()
@@ -162,7 +149,7 @@ func defaultTemplate() template {
 	return template{
 		name:   "<default>",
 		header: defaultHeaderTemplate,
-		source: defaultHeaderTemplate,
+		source: defaultSourceTemplate,
 	}
 }
 
