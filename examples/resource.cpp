@@ -48,7 +48,12 @@ namespace test {
 
 std::string res::Get(std::string const& key) {
     static std::unordered_map<std::string,ResourceGetter> getters = {
-    };
+	{ "string_test", res::string_test },
+	{ "binary_file_test", res::binary_file_test },
+	{ "itself", res::itself },
+	{ "custom.member/name", res::custom_member_name },
+	{ "multiline_example", res::multiline_example },
+	};
     auto getter = getters.find(key);
     if (getter == getters.end())
          return OnNoKey(key);

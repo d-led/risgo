@@ -120,7 +120,10 @@ namespace {{namespace_name}} {
 
 std::string {{class_name}}::Get(std::string const& key) {
     static std::unordered_map<std::string,ResourceGetter> getters = {
-{{source_getters}}    };
+{{#each resource}}
+	{ "{{name}}", {{class_name}}::{{member_name}} },
+{{/each}}
+	};
     auto getter = getters.find(key);
     if (getter == getters.end())
          return OnNoKey(key);

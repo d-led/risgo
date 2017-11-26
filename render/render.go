@@ -27,7 +27,7 @@ func (r *Ris) render() {
 
 	resources := r.loadResources(r.Resource)
 
-	ctx := contextFrom(resources)
+	ctx := contextFrom(resources, r.HeaderOverride)
 
 	header, err := renderTemplate(t.Header, ctx)
 	app.QuitOnError(err)
@@ -50,9 +50,13 @@ func (r *Ris) render() {
 	writeAllText(source, source_filename)
 }
 
-func contextFrom(resources resource_collection) map[string]interface{} {
+func contextFrom(resources resource_collection, headerOverride string) map[string]interface{} {
+	header := resources.Header
+	if headerOverride != "" {
+		header = headerOverride
+	}
 	return map[string]interface{}{
-		"source_include": resources.Header,
+		"source_include": header,
 		"namespace_name": resources.Namespace,
 		"class_name":     resources.Class,
 		"resource":       prepareResources(resources),

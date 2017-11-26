@@ -1,4 +1,9 @@
+#ifndef RES_INCLUDE
 #include "resource.h"
+#else
+#include RES_INCLUDE
+#endif
+
 #include <iostream>
 
 int main() {
