@@ -9,12 +9,6 @@ type Ris struct {
 	template string
 }
 
-type template struct {
-	name   string
-	header string
-	source string
-}
-
 func Render(resource string, template string) {
 	r := Ris{resource, template}
 	r.render()
@@ -26,7 +20,15 @@ func (r *Ris) render() {
 	fmt.Println("Resource:", r.resource)
 	resources := r.loadResources(r.resource)
 	header, err := renderTemplate(t.header, map[string]interface{}{
-		"header": resources.Header,
+		"header":         resources.Header,
+		"namespace_name": "my_namespace",
+		"class_name":     "Resource",
+		"resource": []map[string]interface{}{
+			{
+				"member_name": "bla",
+				"name":        "bla",
+			},
+		},
 	})
 	fmt.Println("Header", header, err)
 }
