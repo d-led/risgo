@@ -1,0 +1,10 @@
+version: 1.0.{build}
+
+environment:
+  global:
+    GOPATH: c:\gopath
+
+clone_folder: c:\gopath\src\github.com\d-led\risgo
+
+build_script:
+- cmd: make.bat
