@@ -37,6 +37,12 @@ the files `examples/resource.h` and `.cpp` will be generated, where `test::res::
 
 More help on template and output overrides and a template example: `risgo --help`
 
+## build
+
+- checkout in `$GOPATH/src/<user>`
+- Linux/Mac: `make test`
+- Windows: `make.bat`
+
 ## credits
 
 - [spf13/cobra](https://github.com/spf13/cobra) CLI implementation
