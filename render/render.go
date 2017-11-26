@@ -56,7 +56,7 @@ func contextFrom(resources resource_collection, headerOverride string) map[strin
 		header = headerOverride
 	}
 	return map[string]interface{}{
-		"source_include": header,
+		"source_include": strings.Replace(header,"\\","/",-1),
 		"namespace_name": resources.Namespace,
 		"class_name":     resources.Class,
 		"resource":       prepareResources(resources),
@@ -65,7 +65,9 @@ func contextFrom(resources resource_collection, headerOverride string) map[strin
 
 func prepareResources(resources resource_collection) []map[string]interface{} {
 	res := []map[string]interface{}{}
-	base_dir := path.Dir(resources.ResourceSource)
+	fmt.Println("res source", resources.ResourceSource)
+	// path.Dir doesn't seem to handle windows paths correctly
+	base_dir := path.Clean(path.Dir(strings.Replace(resources.ResourceSource,"\\","/",-1)))
 	for _, r := range resources.Resources {
 
 		if r.Compression != "" {
@@ -90,7 +92,8 @@ func resourceContent(r resource, base_dir string) []byte {
 	if r.Source_type == "string" {
 		return []byte(r.Source)
 	} else if r.Source_type == "file" {
-		next_to_template := path.Join(base_dir, r.Source)
+		fmt.Println("base dir",base_dir)
+		next_to_template := path.Clean(path.Join(base_dir, r.Source))
 		return readAllBytes(next_to_template)
 	} else {
 		app.QuitOnError(errors.New("unknown source type: " + r.Source_type))
