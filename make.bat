@@ -14,7 +14,7 @@ if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 cl examples\test.cpp examples\resource.cpp /EHsc /Iexamples /I. /Fetest
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-test.exe %DOCTEST_OPT%
+test.exe %DOCTEST_OPT% 2>&1
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
 
@@ -25,5 +25,5 @@ if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 cl examples\test.cpp examples\resource03.cpp /EHsc /DRES_INCLUDE=\"resource03.h\" /Iexamples /I. /Fetest03
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-test03.exe %DOCTEST_OPT%
+test03.exe %DOCTEST_OPT% 2>&1
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
