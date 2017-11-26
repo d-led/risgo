@@ -7,6 +7,8 @@
 a simple cross-platform C++ resource compiler
 > embed data / strings as constants in source
 
+C++ implementation: [ris](https://github.com/d-led/ris)
+
 ## usage
 
 basic usage:
