@@ -15,7 +15,7 @@ resources:
     source_type: "file"
   -
     name: "itself"
-    source: "test.json"
+    source: "test.yml"
     source_type: "file"
   # -
   #   compression: "LZ4F"
