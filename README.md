@@ -1,7 +1,7 @@
 # risgo
 
 
-[![Build status](https://ci.appveyor.com/api/projects/status/m5guafacv4a2j7yu/branch/master?svg=true)](https://ci.appveyor.com/project/d-led/risgo/branch/master) [![Build Status](https://travis-ci.org/d-led/risgo.svg?branch=master)](https://travis-ci.org/d-led/risgo)
+[![Build status](https://ci.appveyor.com/api/projects/status/m5guafacv4a2j7yu/branch/master?svg=true)](https://ci.appveyor.com/project/d-led/risgo/branch/master) [![Build Status](https://travis-ci.org/d-led/risgo.svg?branch=master)](https://travis-ci.org/d-led/risgo) [![Go Report Card](https://goreportcard.com/badge/github.com/d-led/risgo)](https://goreportcard.com/report/github.com/d-led/risgo)
 
 
 a simple cross-platform C++ resource compiler
