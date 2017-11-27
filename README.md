@@ -50,4 +50,4 @@ More help on template and output overrides and a template example: `risgo --help
 - [spf13/cobra](https://github.com/spf13/cobra) CLI implementation
 - [go-yaml/yaml](https://github.com/go-yaml/yaml) YAML parsing/rendering
 - [aymerick/raymond](https://github.com/aymerick/raymond) Handlebars (templates) for output customization
-- [onqtam/doctest](https://github.com/onqtam/doctest) ([examples/doctest.h](examples/doctest.h)) C++ tests
+- [Catch](http://catch-lib.net) ([examples/catch.hpp](examples/catch.hpp)) C++ tests
