@@ -39,7 +39,7 @@ source: |-
         /* This file has been generated using risgo, do not modify! */
         #include <algorithm>
         #include <functional>
-        #include "{{source_include}}"
+        #include "{{include_filename}}"
 
         namespace {{namespace_name}} {
 

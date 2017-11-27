@@ -113,7 +113,7 @@ public:
 
 const defaultSourceTemplate = `/* This file has been generated using risgo, do not modify! */
 #include <unordered_map>
-#include "{{source_include}}"
+#include "{{include_filename}}"
 
 namespace {{namespace_name}} {
 

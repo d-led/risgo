@@ -1,7 +1,7 @@
 /* This file has been generated using risgo, do not modify! */
 #include <algorithm>
 #include <functional>
-#include "examples/resource03.h"
+#include "resource03.h"
 
 namespace test {
 

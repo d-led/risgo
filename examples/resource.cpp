@@ -1,6 +1,6 @@
 /* This file has been generated using risgo, do not modify! */
 #include <unordered_map>
-#include "examples/resource.h"
+#include "resource.h"
 
 namespace test {
 

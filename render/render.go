@@ -32,7 +32,7 @@ func (r *Ris) render() {
 
 	applyOverrides(&resources, r)
 
-	ctx := contextFrom(resources, r.HeaderOverride)
+	ctx := contextFrom(resources)
 
 	renderToFile(t.Header, ctx, resources.Header)
 	renderToFile(t.Source, ctx, resources.Source)
@@ -55,16 +55,13 @@ func renderToFile(template string, ctx map[string]interface{}, filename string) 
 	writeAllText(res, filename)
 }
 
-func contextFrom(resources resourceCollection, headerOverride string) map[string]interface{} {
-	header := resources.Header
-	if headerOverride != "" {
-		header = headerOverride
-	}
+func contextFrom(resources resourceCollection) map[string]interface{} {
 	return map[string]interface{}{
-		"source_include": strings.Replace(header, "\\", "/", -1),
-		"namespace_name": resources.Namespace,
-		"class_name":     resources.Class,
-		"resource":       prepareResources(resources),
+		"source_include":   strings.Replace(resources.Header, "\\", "/", -1),
+		"include_filename": path.Base(resources.Header),
+		"namespace_name":   resources.Namespace,
+		"class_name":       resources.Class,
+		"resource":         prepareResources(resources),
 	}
 }
 
