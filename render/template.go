@@ -31,6 +31,7 @@ func defaultTemplate() template {
 	}
 }
 
+// DefaultTemplateYaml : export the default code generation template in YAML form for copying
 func DefaultTemplateYaml() string {
 	t := defaultTemplate()
 	res, err := yaml.Marshal(&t)

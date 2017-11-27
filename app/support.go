@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// QuitOnError : display the error and quit if it's not nil
 func QuitOnError(err error) {
 	if err == nil {
 		return

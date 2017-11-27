@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// Ris : input for the code generator run
 type Ris struct {
 	Resource       string
 	Template       string
@@ -16,6 +17,7 @@ type Ris struct {
 	SourceOverride string
 }
 
+// Render : run the code generation
 func (r *Ris) Render() {
 	r.render()
 }
@@ -36,7 +38,7 @@ func (r *Ris) render() {
 	renderToFile(t.Source, ctx, resources.Source)
 }
 
-func applyOverrides(resources *resource_collection, r *Ris) {
+func applyOverrides(resources *resourceCollection, r *Ris) {
 	if r.HeaderOverride != "" {
 		resources.Header = r.HeaderOverride
 	}
@@ -53,36 +55,36 @@ func renderToFile(template string, ctx map[string]interface{}, filename string) 
 	writeAllText(res, filename)
 }
 
-func contextFrom(resources resource_collection, headerOverride string) map[string]interface{} {
+func contextFrom(resources resourceCollection, headerOverride string) map[string]interface{} {
 	header := resources.Header
 	if headerOverride != "" {
 		header = headerOverride
 	}
 	return map[string]interface{}{
-		"source_include": strings.Replace(header,"\\","/",-1),
+		"source_include": strings.Replace(header, "\\", "/", -1),
 		"namespace_name": resources.Namespace,
 		"class_name":     resources.Class,
 		"resource":       prepareResources(resources),
 	}
 }
 
-func prepareResources(resources resource_collection) []map[string]interface{} {
+func prepareResources(resources resourceCollection) []map[string]interface{} {
 	res := []map[string]interface{}{}
 	// path.Dir doesn't seem to handle windows paths correctly
-	base_dir := path.Clean(path.Dir(strings.Replace(resources.ResourceSource,"\\","/",-1)))
+	baseDir := path.Clean(path.Dir(strings.Replace(resources.ResourceSource, "\\", "/", -1)))
 	for _, r := range resources.Resources {
 
 		if r.Compression != "" {
 			app.QuitOnError(errors.New("Compression with " + r.Compression + " not supported yet!"))
 		}
 
-		member_name := memberName(r)
+		memberName := memberNameFor(r)
 
 		res = append(res,
 			map[string]interface{}{
-				"member_name": member_name,
+				"member_name": memberName,
 				"name":        r.Name,
-				"bytes":       renderBytesFor(resourceContent(r, base_dir)),
+				"bytes":       renderBytesFor(resourceContent(r, baseDir)),
 			},
 		)
 	}
@@ -90,24 +92,23 @@ func prepareResources(resources resource_collection) []map[string]interface{} {
 	return res
 }
 
-func resourceContent(r resource, base_dir string) []byte {
-	if r.Source_type == "string" {
+func resourceContent(r resource, baseDir string) []byte {
+	if r.SourceType == "string" {
 		return []byte(r.Source)
-	} else if r.Source_type == "file" {
-		next_to_template := path.Clean(path.Join(base_dir, r.Source))
-		return readAllBytes(next_to_template)
+	} else if r.SourceType == "file" {
+		nextToTemplate := path.Clean(path.Join(baseDir, r.Source))
+		return readAllBytes(nextToTemplate)
 	} else {
-		app.QuitOnError(errors.New("unknown source type: " + r.Source_type))
+		app.QuitOnError(errors.New("unknown source type: " + r.SourceType))
 	}
 	return []byte("")
 }
 
-func memberName(r resource) string {
-	if len(strings.TrimSpace(r.Member_name)) == 0 {
+func memberNameFor(r resource) string {
+	if len(strings.TrimSpace(r.MemberName)) == 0 {
 		return strings.TrimSpace(r.Name)
-	} else {
-		return strings.TrimSpace(r.Member_name)
 	}
+	return strings.TrimSpace(r.MemberName)
 }
 
 func readAllBytes(filename string) []byte {

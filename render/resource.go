@@ -8,13 +8,13 @@ import (
 
 type resource struct {
 	Name        string
-	Member_name string //optional
-	Source_type string
+	MemberName  string `yaml:"member_name"` //optional
+	SourceType  string `yaml:"source_type"`
 	Source      string
 	Compression string
 }
 
-type resource_collection struct {
+type resourceCollection struct {
 	ResourceSource string // where
 	Namespace      string
 	Header         string
@@ -23,8 +23,8 @@ type resource_collection struct {
 	Resources      []resource
 }
 
-func (r *Ris) loadResources(filename string) resource_collection {
-	res := resource_collection{}
+func (r *Ris) loadResources(filename string) resourceCollection {
+	res := resourceCollection{}
 
 	data, err := ioutil.ReadFile(filename)
 	app.QuitOnError(err)
