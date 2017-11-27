@@ -1,4 +1,4 @@
-rem @echo off
+@echo off
 
 go get ./...
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
