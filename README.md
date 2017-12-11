@@ -15,7 +15,7 @@ basic usage:
 
 ```
 risgo <path_to>/<resources>.yml
-``
+```
 
 Given the following input
 
